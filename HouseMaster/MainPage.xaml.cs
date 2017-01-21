@@ -168,7 +168,7 @@ namespace HouseMaster
 
         private void AnalyzeTempData(int data)
         {
-            // logic for F vs C
+            // logic for F vs C 
         }
 
         private string DoorStateString(int data)
