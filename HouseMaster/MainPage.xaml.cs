@@ -99,6 +99,7 @@ namespace HouseMaster
                     break;
 
                 case "i":
+                    // bay B
                     txbGarTempValue.Text = string.Format("{0}{1}", value.ToString(), isCelcius ? celciusSymbol : fahrenheitSymbol);
                     break;
 
@@ -164,11 +165,6 @@ namespace HouseMaster
             */
 
             #endregion
-        }
-
-        private void AnalyzeTempData(int data)
-        {
-            // logic for F vs C 
         }
 
         private string DoorStateString(int data)
@@ -239,5 +235,19 @@ namespace HouseMaster
             return statusString;
         }
 
+        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            txbKitDoorValue.Text = ".........";
+            txbGarDoorValue.Text = ".........";
+            txbGarLightsValue.Text = ".........";
+            txbGarBayAValue.Text = ".........";
+            txbGarBayBValue.Text = ".........";
+            txbGarTempValue.Text = ".........";
+            txbFrontTempValue.Text = ".........";
+            txbFronthumidValue.Text = ".........";
+            txbFrontHIValue.Text = ".........";
+
+            _socket.Send("r0");
+        }
     }
 }

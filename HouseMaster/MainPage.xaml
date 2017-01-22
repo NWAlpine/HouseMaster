@@ -18,6 +18,8 @@
         <TextBox x:Name="txtMessage" HorizontalAlignment="Left" Margin="27,114,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="40" Width="428"/>
         <Button x:Name="btnSend" Content="Send" HorizontalAlignment="Left" Margin="358,172,0,0" VerticalAlignment="Top" Width="97" Click="btnSend_Click"/>
 
+        <Button x:Name="btnRefresh" Content="Refresh" HorizontalAlignment="Left" Margin="234,172,0,0" VerticalAlignment="Top" Width="97" Click="btnRefresh_Click"/>
+
         <TextBlock x:Name="txbMessageReceived" HorizontalAlignment="Left" Margin="27,208,0,0" TextWrapping="Wrap" Text="Received Message:" VerticalAlignment="Top"/>
         <TextBox x:Name="txtMessageReceived" HorizontalAlignment="Left" Margin="27,233,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="42" Width="428" IsReadOnly="True"/>
 
