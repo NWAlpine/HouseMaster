@@ -49,6 +49,8 @@ namespace HouseMaster
                 var hostName = new HostName(Ip);
                 _socket = new StreamSocket();
                 await _socket.ConnectAsync(hostName, Port.ToString());
+
+                // connected, now read
                 _writer = new DataWriter(_socket.OutputStream);
                 Read();
 
@@ -126,6 +128,9 @@ namespace HouseMaster
         /// </summary>
         public void Close()
         {
+            // TODO: these need to be wrapped in a Using statement so the cleanup
+            // happens when the object is out of scope
+            // http://donatas.xyz/streamsocket-tcpip-client.html
             _writer.DetachStream();
             _writer.Dispose();
 

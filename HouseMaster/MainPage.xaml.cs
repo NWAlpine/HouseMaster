@@ -22,12 +22,14 @@ namespace HouseMaster
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        HomeMasterClient _socket;
+        HomeMasterClient _clientSocket;
 
         // degree symbol = alt+0176 
         const string celciusSymbol = "°C";
         const string fahrenheitSymbol = "°F";
         bool isCelcius = true;  //default
+
+        bool isConnected = false;
 
         public MainPage()
         {
@@ -38,21 +40,49 @@ namespace HouseMaster
 
         private void btnConnect_Click(object o, RoutedEventArgs e)
         {
-            if (_socket != null)
+            if (isConnected)
             {
-                _socket.Close();
-                _socket.OnDataReceived -= Socket_OnDataRecived;
-                _socket = null;
+                // true: disconnect client
+                _clientSocket.Close();
+                _clientSocket.OnDataReceived -= Socket_OnDataRecived;
+                _clientSocket = null;
+
+                ClearDataValues();
+
+                txtIp.IsReadOnly = false;
+                txtPort.IsReadOnly = false;
+                txtIp.Background = new SolidColorBrush(Windows.UI.Colors.White);
+                txtPort.Background = new SolidColorBrush(Windows.UI.Colors.White);
+
+                btnConnect.Content = TextStrings.Connect;
+                isConnected = false;
+
+                txbStatus.Text = isConnected == true ? TextStrings.Connected : TextStrings.Stopped;
             }
+            else
+            {
+                // false: try to connect client
+                if (_clientSocket != null)
+                {
+                    _clientSocket.Close();
+                    _clientSocket.OnDataReceived -= Socket_OnDataRecived;
+                    _clientSocket = null;
+                }
 
-            _socket = new HomeMasterClient(txtIp.Text, Convert.ToInt32(txtPort.Text));
-            _socket.Connect();
-            _socket.OnDataReceived += Socket_OnDataRecived;
+                _clientSocket = new HomeMasterClient(txtIp.Text, Convert.ToInt32(txtPort.Text));
+                _clientSocket.Connect();
+                _clientSocket.OnDataReceived += Socket_OnDataRecived;
 
-            txbStatus.Text = "Running...";
+                isConnected = true;
+                txbStatus.Text = isConnected == true ? TextStrings.Connected : TextStrings.Stopped;
 
-            //TODO: NYI disconnect
-            //btnConnect.Content = "Disconnect";
+                txtIp.IsReadOnly = true;
+                txtPort.IsReadOnly = true;
+                txtIp.Background = new SolidColorBrush(Windows.UI.Colors.LightGray);
+                txtPort.Background = new SolidColorBrush(Windows.UI.Colors.LightGray);
+
+                btnConnect.Content = TextStrings.Disconnect;
+            }
         }
 
         private void Socket_OnDataRecived(string data)
@@ -66,7 +96,7 @@ namespace HouseMaster
 
         private void btnSend_Click(object sender, RoutedEventArgs e)
         {
-            _socket.Send(txtMessage.Text);
+            _clientSocket.Send(txtMessage.Text);
         }
 
         private void DisplayData(string data)
@@ -237,6 +267,15 @@ namespace HouseMaster
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
+            // clear out the UI values
+            ClearDataValues();
+
+            // send a refresh command
+            _clientSocket.Send("r0");
+        }
+
+        private void ClearDataValues()
+        {
             txbKitDoorValue.Text = ".........";
             txbGarDoorValue.Text = ".........";
             txbGarLightsValue.Text = ".........";
@@ -246,8 +285,34 @@ namespace HouseMaster
             txbFrontTempValue.Text = ".........";
             txbFronthumidValue.Text = ".........";
             txbFrontHIValue.Text = ".........";
+        }
 
-            _socket.Send("r0");
+        public class TextStrings
+        {
+            public static string Connected
+            {
+                get { return "Connected."; }
+            }
+
+            public static string Running
+            {
+                get { return "Running..."; }
+            }
+
+            public static string Stopped
+            {
+                get { return "Stopped."; }
+            }
+
+            public static string Connect
+            {
+                get { return "Connect"; }
+            }
+
+            public static string Disconnect
+            {
+                get { return "Disconnect"; }
+            }
         }
     }
 }
