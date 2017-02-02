@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -14,6 +17,13 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
+
+// to find the IP address of the RPi, start with this:
+// $ip = arp -a "$IPAddress"
+// from: https://blog.kizan.com/find-the-ip-address-of-a-windows-10-iot-core-device-after-initial-flash-with-powershell
+//
+// deploy and setup default package
+// https://www.hackster.io/AnuragVasanwala/windows-10-iot-core-setting-startup-app-887ed0
 
 namespace HouseMaster
 {
@@ -36,6 +46,8 @@ namespace HouseMaster
             this.InitializeComponent();
             txtPort.Text = "9000";
             txtIp.Text = "192.168.0.24";
+
+            // find the RPiGarageController
         }
 
         private void btnConnect_Click(object o, RoutedEventArgs e)
@@ -96,7 +108,7 @@ namespace HouseMaster
 
         private void btnSend_Click(object sender, RoutedEventArgs e)
         {
-            _clientSocket.Send(txtMessage.Text);
+            //_clientSocket.Send(txtMessage.Text);
         }
 
         private void DisplayData(string data)
