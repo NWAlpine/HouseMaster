@@ -140,8 +140,11 @@ namespace HouseMaster
                     txbGarBayAValue.Text = BayStateString(value);
                     break;
 
+                    // missing bay B - is garageNode and garageController sending data
+
+
                 case "i":
-                    // bay B
+                    // garage temp
                     txbGarTempValue.Text = string.Format("{0}{1}", value.ToString(), isCelcius ? celciusSymbol : fahrenheitSymbol);
                     break;
 
